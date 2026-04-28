@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import api, { getSession } from '../api/client';
+import api, { getSession, loginWithCredentials, logout as apiLogout } from '../api/client';
 import { User } from '../types/entities';
 
 interface AuthContextType {
@@ -58,14 +58,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [refreshUser]);
 
   const login = async (email: string, password: string) => {
-    const { loginWithCredentials } = await import('../api/client');
     await loginWithCredentials(email, password);
     await refreshUser();
   };
 
   const logout = async () => {
-    const { logout: doLogout } = await import('../api/client');
-    await doLogout();
+    await apiLogout();
     setUserState(null);
   };
 
